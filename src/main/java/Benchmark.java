@@ -29,11 +29,9 @@ public class Benchmark {
 		long nodeFindStart = System.currentTimeMillis();
 		double[] coords = {0.0, 0.0};
 
-
-
-
 		// TODO: find closest node here and write coordinates into coords
-		graph.findClosestNode(coords[0], coords[1]);
+		coords = graph.findClosestNode(lat, lon);
+
 
 
 		long nodeFindEnd = System.currentTimeMillis();
@@ -60,7 +58,7 @@ public class Benchmark {
 
 		System.out.println("Computing one-to-all Dijkstra from node id " + sourceNodeId);
 		long oneToAllStart = System.currentTimeMillis();
-		// TODO: run one-to-all Dijkstra with weight 1.0 here
+		int[] weightsFromSource = dijkstra.oneToAll(sourceNodeId, 1.0);
 
 		long oneToAllEnd = System.currentTimeMillis();
 		System.out.println("\tone-to-all Dijkstra took " + (oneToAllEnd - oneToAllStart) + "ms");
@@ -68,8 +66,8 @@ public class Benchmark {
 		// ask user for a target node id
 		System.out.print("Enter target node id... ");
 		int targetNodeId = (new Scanner(System.in)).nextInt();
-		int oneToAllDistance = -42;
-		// TODO set oneToAllDistance to the distance from sourceNodeId to
+		int oneToAllDistance = weightsFromSource[targetNodeId];
+
 		// targetNodeId as computed by the one-to-all Dijkstra
 		System.out.println("Distance from " + sourceNodeId + " to " + targetNodeId + " is " + oneToAllDistance);
 	}

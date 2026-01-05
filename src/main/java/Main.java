@@ -14,9 +14,10 @@ public class Main {
         GraphReader reader = new GraphReader(path);
         Graph graph = reader.readData();
         System.out.println("Done");
-        System.out.println(Arrays.toString(graph.getEdgeHeight()));
+        // System.out.println(Arrays.toString(graph.getEdgeHeight()));
         Dijkstra dijkstra = new Dijkstra(graph);
-        long distance = dijkstra.oneToOne(0,3, 0.9);
-        System.out.println(distance);
+        //long distance = dijkstra.oneToOne(0,3, 0.9);
+        int[] distance = dijkstra.oneToAll(0,0.8);
+        System.out.println(Arrays.toString(distance));
     }
 }
