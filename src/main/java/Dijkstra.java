@@ -15,9 +15,9 @@ public class Dijkstra {
         State(long distance, int node)
         {this.distance = distance;this.node = node;}
     }
-    private static long edgeCostCm(int lengthCm, int heightCm, double weight){
-        double cost = weight * lengthCm + (1 - weight) * heightCm;
-        return Math.round(cost);
+    private static int edgeCostCm(int lengthCm, int heightCm, double weight){
+        long sum = (long) weight * lengthCm + (long) (10 - weight) * heightCm;
+        return (int) ((sum + 5) / 10);
     }
     /**
      * Calculates the fastest way from one node to another one.

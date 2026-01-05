@@ -68,8 +68,8 @@ public class CordToTile {
             hMeters = wA * hA + wb * hB + wc * hC;
         } else {
             double wD = dx + dy - 1.0;
-            double wc = 1.0 - dx;
-            double wb = 1.0 - dy;
+            double wb = 1.0 - dx;
+            double wc = 1.0 - dy;
             hMeters = wD * hD + wc * hC + wb * hB;
         }
 
