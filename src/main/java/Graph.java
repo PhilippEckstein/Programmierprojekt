@@ -32,7 +32,25 @@ public class Graph {
         this.edgeLength = new int[numberOfEdges];
         this.edgeHeight = new int[numberOfEdges];
     }
-
+    public double[] findClosestNode(double lat, double lon) {
+        int best = -1;
+        double bestApprox = Double.POSITIVE_INFINITY;
+        double[] coords = {0.0,0.0};
+        double[] gLat = getLat();
+        double[] gLon = getLon();
+        for (int i = 0; i < numberOfNodes; i++) {
+            double dx = gLat[i] - lat;
+            double dy = gLon[i] - lon;
+            double d2 = Math.sqrt(dx * dx + dy * dy);
+            if (d2 < bestApprox) {
+                bestApprox = d2;
+                best = i;
+            }
+        }
+        coords[0] = gLon[best];
+        coords[1] = gLat[best];
+        return coords;
+    }
     public int getNumberOfNodes(){return numberOfNodes;}
     public int getNumberOfEdges(){return numberOfEdges;}
     public double[] getLat() { return lat; }

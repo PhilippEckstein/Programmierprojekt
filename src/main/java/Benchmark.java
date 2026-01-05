@@ -6,6 +6,10 @@ import java.util.Scanner;
 public class Benchmark {
 
 	public static void main(String[] args) {
+		if (args.length < 1) {
+			System.out.println("Usage: GraphReaderMain <path-to-graph-file>");
+			return;
+		}
 		// read parameters (parameters are expected in exactly this order)
 		String graphPath = args[1];
 		double lon = Double.parseDouble(args[3]);
@@ -26,11 +30,16 @@ public class Benchmark {
 		double[] coords = {0.0, 0.0};
 
 
+
+
 		// TODO: find closest node here and write coordinates into coords
-		Dijkstra dijkstra = new Dijkstra(graph);
+		graph.findClosestNode(coords[0], coords[1]);
+
+
 		long nodeFindEnd = System.currentTimeMillis();
 		System.out.println("\tfinding node took " + (nodeFindEnd - nodeFindStart) + "ms: " + coords[0] + ", " + coords[1]);
 
+		Dijkstra dijkstra = new Dijkstra(graph);
 		System.out.println("Running one-to-one Dijkstras for queries in .que file " + quePath);
 		long queStart = System.currentTimeMillis();
 		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(quePath))) {
