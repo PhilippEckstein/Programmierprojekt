@@ -1,19 +1,18 @@
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class Main {
-    public static void main(String[] args) {
-        if (args.length < 1) {
-            System.out.println("Usage: GraphReaderMain <path-to-graph-file>");
-            return;
-        }
-        String path = args[0];
-        GraphReader reader = new GraphReader(path);
-        Graph graph = reader.readData();
-
-        System.out.println("Done");
-
-        Dijkstra dijkstra = new Dijkstra(graph);
-        long dist = dijkstra.oneToOne(0,1);
-        System.out.println(dist);
-
-
+    public static void main(String[] args) throws IOException {
+        Path srtmDir = Paths.get("C:\\Users\\phili\\Documents\\Programmierprojekt\\data\\srtm");
+        HgtTile tile = new HgtTile(
+                srtmDir,
+                "N47E005",
+                47,
+                5
+        );
+        System.out.println(tile.heightMeters(0, 0));
+        System.out.println(tile.heightMeters(3600, 3600));
     }
 }
