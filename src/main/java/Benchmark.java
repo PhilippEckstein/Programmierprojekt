@@ -69,5 +69,4 @@ public class Benchmark {
 		// targetNodeId as computed by the one-to-all Dijkstra
 		System.out.println("Distance from " + sourceNodeId + " to " + targetNodeId + " is " + oneToAllDistance);
 	}
-
 }

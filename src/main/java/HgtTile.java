@@ -1,3 +1,5 @@
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,18 +14,20 @@ public class HgtTile {
         this.baseLat = baseLat;
         this.baseLon = baseLon;
         Path file = path.resolve(tileName + ".hgt");
-
-        byte[] raw = Files.readAllBytes(file);
-        int expected = 2 * SIZE * SIZE;
-        if (raw.length != expected) {
-            throw new IOException("Unexpected .hgt size: " + raw.length + " bytes, expected " + expected);
+        long expectedBytes = 2L * SIZE * SIZE;
+        long actualBytes = Files.size(file);
+        if (actualBytes != expectedBytes) {
+            throw new IOException("Unexpected .hgt size: " + actualBytes + " bytes, expected " + expectedBytes);
         }
         this.heights = new short[SIZE * SIZE];
-        int p = 0;
-        for (int i = 0; i < heights.length; i++) {
-            int high = raw[p++] & 0xFF;
-            int low = raw[p++] & 0xFF;
-            heights[i] = (short) ((high <<8) | low);
+        try (DataInputStream in = new DataInputStream(
+                new BufferedInputStream(Files.newInputStream(file), 1 << 20))) {
+            for (int i = 0; i < heights.length; i++) {
+                heights[i] = in.readShort();
+            }
+
+        } catch (IOException e) {
+            throw new IOException("Unexpected EOF while reading: " + file, e);
         }
     }
     public short heightMeters(int row, int col) {

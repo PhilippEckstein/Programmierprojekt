@@ -15,8 +15,16 @@ public class CordToTile {
     private static String tileName(double lat, double lon){
         int baseLat = (int) Math.floor(lat);
         int baseLon = (int) Math.floor(lon);
-        return String.format("N%02dE%03d",baseLat,baseLon);
+
+        char ns = (baseLat >= 0) ? 'N' : 'S';
+        char ew = (baseLon >= 0) ? 'E' : 'W';
+
+        int absLat = Math.abs(baseLat);
+        int absLon = Math.abs(baseLon);
+
+        return String.format("%c%02d%c%03d", ns, absLat, ew, absLon);
     }
+
     private HgtTile getTile(double lat, double lon) throws IOException {
         int baseLat = (int) Math.floor(lat);
         int baseLon = (int) Math.floor(lon);
@@ -55,8 +63,8 @@ public class CordToTile {
         // Create a triangle from the rectangle and the chose the triangle where the point is located
         if (dx + dy <= 1.0){
             double wA = 1.0 - dx - dy;
-            double wb = dx;
-            double wc = dx + dy;
+            double wb = dy;
+            double wc = dx;
             hMeters = wA * hA + wb * hB + wc * hC;
         } else {
             double wD = dx + dy - 1.0;
