@@ -20,6 +20,7 @@ public class GraphReader  {
     public GraphReader(String name) {
         File f = new File(name);
         this.file = f;
+
         if (!f.isFile()) {
             System.err.println("File not found");
         } else {
@@ -44,8 +45,10 @@ public class GraphReader  {
 
     public Graph readData(){
         long t0 = System.nanoTime();
-        CordToTile cordToTile = new CordToTile(Paths.get("C:\\Users\\phili\\Documents\\Programmierprojekt\\data\\srtm"));
-
+        Path graphPath = file.toPath().toAbsolutePath().normalize();
+        Path baseDir = graphPath.getParent();
+        Path srtmDir = baseDir.resolve("srtm");
+        CordToTile cordToTile = new CordToTile(srtmDir);
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))){
             String nodeCount = nextDataLine(br);

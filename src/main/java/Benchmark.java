@@ -6,6 +6,10 @@ import java.util.Scanner;
 public class Benchmark {
 
 	public static void main(String[] args) {
+		if (args.length < 10) {
+			System.out.println("Usage: java Benchmark -graph <file> -lon <lon> -lat <lat> -que <file> -s <source>");
+			return;
+		}
 		// read parameters (parameters are expected in exactly this order)
 		String graphPath = args[1];
 		double lon = Double.parseDouble(args[3]);
@@ -25,7 +29,6 @@ public class Benchmark {
 		long nodeFindStart = System.currentTimeMillis();
 		double[] coords = {0.0, 0.0};
 
-		// TODO: find closest node here and write coordinates into coords
 		coords = graph.findClosestNode(lon, lat);
 
 

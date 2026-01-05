@@ -24,6 +24,7 @@ public class CordToTile {
         HgtTile tile = tiles.get(name);
         if (tile == null) {
             tile = new HgtTile(path, name, baseLat, baseLon);
+            tiles.put(name, tile);
         }
         return tile;
     }

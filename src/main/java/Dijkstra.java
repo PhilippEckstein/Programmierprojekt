@@ -47,11 +47,6 @@ public class Dijkstra {
 
             for (int i = graph.firstOut(node); i < graph.firstOut(node+1); i++) {
                 int dest = edgesTo[i];
-                System.out.println(
-                        "edge " + node + " -> " + dest +
-                                " len=" + edgeLength[i] +
-                                " up=" + edgeHeight[i]
-                );
                 int cost = edgeCostCm(edgeLength[i], edgeHeight[i], weight);
                 int totalCost = current.distance + cost;
                 if (totalCost < dist[dest]) {

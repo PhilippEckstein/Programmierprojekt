@@ -1,7 +1,4 @@
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 
 public class Main {
@@ -16,8 +13,8 @@ public class Main {
         System.out.println("Done");
         // System.out.println(Arrays.toString(graph.getEdgeHeight()));
         Dijkstra dijkstra = new Dijkstra(graph);
-        //long distance = dijkstra.oneToOne(0,3, 0.9);
-        int[] distance = dijkstra.oneToAll(0,0.8);
-        System.out.println(Arrays.toString(distance));
+        int distance = dijkstra.oneToOne(0,3, 0.9);
+        //int[] distance = dijkstra.oneToAll(0,0.8);
+        System.out.println(distance);
     }
 }
