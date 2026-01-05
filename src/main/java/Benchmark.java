@@ -6,10 +6,6 @@ import java.util.Scanner;
 public class Benchmark {
 
 	public static void main(String[] args) {
-		if (args.length < 1) {
-			System.out.println("Usage: GraphReaderMain <path-to-graph-file>");
-			return;
-		}
 		// read parameters (parameters are expected in exactly this order)
 		String graphPath = args[1];
 		double lon = Double.parseDouble(args[3]);
@@ -30,8 +26,7 @@ public class Benchmark {
 		double[] coords = {0.0, 0.0};
 
 		// TODO: find closest node here and write coordinates into coords
-		coords = graph.findClosestNode(lat, lon);
-
+		coords = graph.findClosestNode(lon, lat);
 
 
 		long nodeFindEnd = System.currentTimeMillis();
@@ -46,7 +41,7 @@ public class Benchmark {
 				int oneToOneSourceNodeId = Integer.parseInt(currLine.substring(0, currLine.indexOf(" ")));
 				int oneToOneTargetNodeId = Integer.parseInt(currLine.substring(currLine.indexOf(" ") + 1, currLine.indexOf(" ", currLine.indexOf(" ") + 1)));
 				double oneToOneWeight = Double.parseDouble(currLine.substring(currLine.indexOf(" ", currLine.indexOf(" ") + 1) + 1));
-				int oneToOneDistance = (int) dijkstra.oneToOne(oneToOneSourceNodeId, oneToOneTargetNodeId, oneToOneWeight);
+				int oneToOneDistance = dijkstra.oneToOne(oneToOneSourceNodeId, oneToOneTargetNodeId, oneToOneWeight);
 				System.out.println(oneToOneDistance);
 			}
 		} catch (Exception e) {

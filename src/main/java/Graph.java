@@ -32,7 +32,7 @@ public class Graph {
         this.edgeLength = new int[numberOfEdges];
         this.edgeHeight = new int[numberOfEdges];
     }
-    public double[] findClosestNode(double lat, double lon) {
+    public double[] findClosestNode(double lon, double lat) {
         int best = -1;
         double bestApprox = Double.POSITIVE_INFINITY;
         double[] coords = {0.0,0.0};
