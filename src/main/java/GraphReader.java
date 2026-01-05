@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 public class GraphReader  {
@@ -42,6 +44,9 @@ public class GraphReader  {
 
     public Graph readData(){
         long t0 = System.nanoTime();
+        CordToTile cordToTile = new CordToTile(Paths.get("C:\\Users\\phili\\Documents\\Programmierprojekt\\data\\srtm"));
+
+
         try (BufferedReader br = new BufferedReader(new FileReader(file))){
             String nodeCount = nextDataLine(br);
             if (nodeCount == null) throw new IOException("Missing node count");
@@ -52,20 +57,27 @@ public class GraphReader  {
             }
             numberOfEdges = Integer.parseInt(edgeCount);
             Graph graph = new Graph(numberOfNodes, numberOfEdges);
-            double[] lat =graph.getLat();
+
+            double[] lat = graph.getLat();
             double[] lon = graph.getLon();
+            int[] heightCm = graph.getHeightCm();
+
             for (int i = 0; i < numberOfNodes; i++) {
                 String line = nextDataLine(br);
                 if (line == null) throw new IOException("Error no line to read");
                 String[] tokens = line.split("\\s+");
-                lat[i] = Double.parseDouble(tokens[2]);
-                lon[i] = Double.parseDouble(tokens[3]);
+                double currentLat = Double.parseDouble(tokens[2]);
+                double currentLon = Double.parseDouble(tokens[3]);
+                lat[i] = currentLat;
+                lon[i] = currentLon;
+                heightCm[i] = cordToTile.heightCmAt(lat[i], lon[i]);
             }
 
             int[] tempSource = new int[numberOfEdges];
             int[] tempDestination = new int[numberOfEdges];
             int[] tempDistance = new int[numberOfEdges];
             int[] outDeg = new int[numberOfNodes];
+
             for (int e = 0; e < numberOfEdges; e++) {
                 String line = nextDataLine(br);
                 if (line == null)  throw new IOException("Error no line to read");
@@ -75,6 +87,7 @@ public class GraphReader  {
                 outDeg[sourceNode]++;
                 tempDestination[e] = Integer.parseInt(tokens[1]);
                 tempDistance[e] = Integer.parseInt(tokens[2]);
+
             }
 
             int[] offset = graph.getOffset();
@@ -85,13 +98,19 @@ public class GraphReader  {
             int[] cursor = Arrays.copyOf(graph.getOffset(), numberOfNodes);
             int[] edgeTo = graph.getEdgeTo();
             int[] edgeLength = graph.getEdgeLength();
+            int[] edgeHeight = graph.getEdgeHeight();
 
             for (int e = 0; e < numberOfEdges; e++) {
-                int u = tempSource[e];
-                int idx = cursor[u]++;
-                edgeTo[idx] = tempDestination[e];
+                int nodeSource = tempSource[e];
+                int idx = cursor[nodeSource]++;
+                int nodeDest = tempDestination[e];
+                edgeTo[idx] = nodeDest;
                 edgeLength[idx] = tempDistance[e];
+                int increase = heightCm[nodeDest] - heightCm[nodeSource] ;
+                edgeHeight[idx] = Math.max(increase, 0);
             }
+
+
             double sec = (System.nanoTime() - t0) / 1_000_000_000.0;
             System.out.println("Finished reading. Time elapsed: " + sec + " s");
             return graph;

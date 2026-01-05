@@ -5,7 +5,7 @@ public class Graph {
 
     private final double[] lat;
     private final double[] lon;
-    private final int[] height;
+    private final int[] heightCm;
 
     private final int[] offset;
     private final int[] edgeTo;
@@ -26,7 +26,7 @@ public class Graph {
         System.out.println("New graph created with " + numberOfNodes + " nodes and " + numberOfEdges + " edges.");
         this.lat = new double[numberOfNodes];
         this.lon = new double[numberOfNodes];
-        this.height = new int[numberOfNodes];
+        this.heightCm = new int[numberOfNodes];
         this.offset = new int[numberOfNodes + 1];
         this.edgeTo = new int[numberOfEdges];
         this.edgeLength = new int[numberOfEdges];
@@ -37,7 +37,7 @@ public class Graph {
     public int getNumberOfEdges(){return numberOfEdges;}
     public double[] getLat() { return lat; }
     public double[] getLon() { return lon; }
-    public int[] getHeight() { return height; }
+    public int[] getHeightCm() { return heightCm; }
 
     public int[] getOffset() { return offset; }
     public int[] getEdgeTo() { return edgeTo; }
