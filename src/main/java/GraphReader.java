@@ -16,7 +16,6 @@ public class GraphReader  {
      *
      * @param name The path of the file that should be read.
      */
-
     public GraphReader(String name) {
         File f = new File(name);
         this.file = f;
@@ -24,11 +23,17 @@ public class GraphReader  {
         if (!f.isFile()) {
             System.err.println("File not found");
         } else {
-            System.out.println("File found at: " + f.getAbsolutePath());
-            System.out.println("Graph read initialized");
+            //System.out.println("File found at: " + f.getAbsolutePath());
+            //System.out.println("Graph read initialized");
         }
     }
 
+    /**
+     * Uses a BufferedReader to read the next line of a file and returns it if it is relevant.
+     * @param br The buffered reader.
+     * @return The next relevant line. Excludes empty lines and lines starting with #.
+     * @throws IOException for I/O issues.
+     */
     private static String nextDataLine(BufferedReader br) throws IOException {
         while(true) {
             String line = br.readLine();
@@ -39,10 +44,11 @@ public class GraphReader  {
             return line;
         }
     }
-    /**
-     * Reads the data of the file from the given past.
-     */
 
+    /**
+     * Reads the data from the file and inserts them into a new Graph object.
+     * @return Returns a Graph object with all data inserted.
+     */
     public Graph readData(){
         long t0 = System.nanoTime();
         Path graphPath = file.toPath().toAbsolutePath().normalize();
@@ -51,6 +57,7 @@ public class GraphReader  {
         CordToTile cordToTile = new CordToTile(srtmDir);
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))){
+            // Node and edge count
             String nodeCount = nextDataLine(br);
             if (nodeCount == null) throw new IOException("Missing node count");
             numberOfNodes = Integer.parseInt(nodeCount);
@@ -59,12 +66,14 @@ public class GraphReader  {
                 throw new IOException("Missing edge count");
             }
             numberOfEdges = Integer.parseInt(edgeCount);
+
+            // Creates graph object
             Graph graph = new Graph(numberOfNodes, numberOfEdges);
 
+            // Inserts latitude and longitude for each node. Calculates height for each node using cordToTile.
             double[] lat = graph.getLat();
             double[] lon = graph.getLon();
             int[] heightCm = graph.getHeightCm();
-
             for (int i = 0; i < numberOfNodes; i++) {
                 String line = nextDataLine(br);
                 if (line == null) throw new IOException("Error no line to read");
@@ -76,6 +85,7 @@ public class GraphReader  {
                 heightCm[i] = cordToTile.heightCmAt(lat[i], lon[i]);
             }
 
+            // Edges
             int[] tempSource = new int[numberOfEdges];
             int[] tempDestination = new int[numberOfEdges];
             int[] tempDistance = new int[numberOfEdges];
@@ -115,7 +125,7 @@ public class GraphReader  {
 
 
             double sec = (System.nanoTime() - t0) / 1_000_000_000.0;
-            System.out.println("Finished reading. Time elapsed: " + sec + " s");
+            //System.out.println("Finished reading. Time elapsed: " + sec + " s");
             return graph;
         } catch (IOException e) {
             System.err.println("Error reading file: " + file.getAbsolutePath());

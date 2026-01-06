@@ -10,6 +10,15 @@ public class HgtTile {
     public int baseLat;
     public int baseLon;
 
+    /**
+     * Creates a new HgtTile that stores 3601*3601 data points of height
+     * for the specified base latitude and base longitude.
+     * @param path The file path to the folder containing all hgt files.
+     * @param tileName The name of the tile.
+     * @param baseLat The base latitude.
+     * @param baseLon The base longitude.
+     * @throws IOException for I/O issues.
+     */
     public HgtTile(Path path, String tileName, int baseLat, int baseLon) throws IOException {
         this.baseLat = baseLat;
         this.baseLon = baseLon;
@@ -30,8 +39,14 @@ public class HgtTile {
             throw new IOException("Unexpected EOF while reading: " + file, e);
         }
     }
+
+    /**
+     * Returns the height of a data point in meters using row and column.
+     * @param row The row of the data entry.
+     * @param col The column of the data entry.
+     * @return Returns a short that represents the height of the given data point in meters.
+     */
     public short heightMeters(int row, int col) {
         return heights[row * SIZE + col];
     }
-
 }

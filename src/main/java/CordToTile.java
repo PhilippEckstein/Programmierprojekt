@@ -7,11 +7,21 @@ public class CordToTile {
     private final Path path;
     private final Map<String,HgtTile> tiles;
 
+    /**
+     * Creates a new CordToTile object.
+     * @param path The path to the hgt tile folder.
+     */
     public CordToTile(Path path) {
         this.path = path;
         this.tiles = new HashMap<>();
     }
 
+    /**
+     * Determines the name of the tile based on the latitude and longitude.
+     * @param lat The latitude that is part of the tile.
+     * @param lon The longitude that is part of the tile.
+     * @return Returns a string that contains the latitude and longitude, for example "N47E009".
+     */
     private static String tileName(double lat, double lon){
         int baseLat = (int) Math.floor(lat);
         int baseLon = (int) Math.floor(lon);
@@ -25,6 +35,14 @@ public class CordToTile {
         return String.format("%c%02d%c%03d", ns, absLat, ew, absLon);
     }
 
+    /**
+     * Returns the HgtTile that is relevant for the coordinate in question. If it does not exist yet,
+     * the tile will be created and loaded.
+     * @param lat The latitude of the coordinate in question.
+     * @param lon The longitude of the coordinate in question.
+     * @return The HgtTile that belongs to the coordinate.
+     * @throws IOException for I/O issues.
+     */
     private HgtTile getTile(double lat, double lon) throws IOException {
         int baseLat = (int) Math.floor(lat);
         int baseLon = (int) Math.floor(lon);
@@ -36,6 +54,15 @@ public class CordToTile {
         }
         return tile;
     }
+
+    /**
+     * Calculates and returns the height in cm at a given latitude and longitude
+     * using barycentric coordinate interpolation.
+     * @param lat The latitude of the coordinate.
+     * @param lon The longitude of the coordinate.
+     * @return Returns an int containing the height at the coordinate specified in cm.
+     * @throws IOException for I/O issues.
+     */
     public int heightCmAt(double lat, double lon) throws IOException {
         HgtTile tile = getTile(lat, lon);
         int baseLat = (int) Math.floor(lat);
@@ -75,5 +102,4 @@ public class CordToTile {
 
         return (int) Math.round(hMeters * 100.0);
     }
-
 }

@@ -5,20 +5,39 @@ import java.util.PriorityQueue;
 public class Dijkstra {
     private final Graph graph;
 
-
+    /**
+     * Creates a new instance of the Dijkstra class.
+     * @param graph the graph Dijkstra is performed on.
+     */
     public Dijkstra(Graph graph) {
         this.graph = graph;
     }
+
+    /**
+     * State represents an entry for a given node that also contains the distance to the source node.
+     */
     private static final class State {
         private long distance;
         private int node;
-        State(long distance, int node)
-        {this.distance = distance;this.node = node;}
+        State(long distance, int node) {
+            this.distance = distance;
+            this.node = node;
+        }
     }
-    private static int edgeCostCm(int lengthCm, int heightCm, double weight){
-        long sum = (long) weight * lengthCm + (long) (10 - weight) * heightCm;
-        return (int) ((sum + 5) / 10);
+
+    /**
+     * Calculates the cost of an edge based on the weight given.
+     * @param lengthCm Edge length in cm
+     * @param heightCm Edge height difference in cm (= 0 if the actual height difference is negative)
+     * @param weight Ranges from 0 to 1 and determines the weighting of length vs. height
+     *               1.0: only length counts. 0.0: only height counts.
+     * @return Returns an int that contains the edge costs according to the specified weight.
+     */
+    private static int edgeCostCm(int lengthCm, int heightCm, double weight) {
+        double sum = weight * lengthCm + (1 - weight) * heightCm;
+        return (int) sum;
     }
+
     /**
      * Calculates the fastest way from one node to another one.
      * @param source The int id of the node that is the source.
@@ -57,10 +76,27 @@ public class Dijkstra {
         }
         return Long.MAX_VALUE;
     }
-    private static int toIntDistance(long x) {
+
+    /**
+     * Returns the int max value if the parameter long is above Integer.MAX_VALUE. If not, returns the
+     * actual value.
+     * @param x long value that is supposed to be reduced if it is above Integer.MAX_VALUE
+     * @return Returns an int with the resulting value not exceeding Integer.MAX_VALUE.
+     */
+    private static int toIntDistance (long x) {
         return (x >= Integer.MAX_VALUE) ? Integer.MAX_VALUE : (int) x;
     }
-    public int oneToOne(int source, int target,double weight) {
+
+    /**
+     * Determines the costs for the Dijkstra algorithm when going from source to target node, taking weight
+     * into account.
+     * @param source The source node ID.
+     * @param target The target node ID.
+     * @param weight Ranges from 0 to 1 and determines the weighting of length vs. height
+     *               1.0: only length counts. 0.0: only height counts.
+     * @return The resulting costs as int.
+     */
+    public int oneToOne(int source, int target, double weight) {
         long res = oneToOneLong(source, target, weight);
         return toIntDistance(res);
     }
@@ -68,8 +104,8 @@ public class Dijkstra {
     /**
      * Calculates the fastest ways to every node from the source node.
      * @param source The int id of the source node.
-     * @param weight The double weight, that decides the relation from distance to heightIncrease.
-     * with 1.0 using only distance as the weight.
+     * @param weight Ranges from 0 to 1 and determines the weighting of length vs. height
+     *               1.0: only length counts. 0.0: only height counts.
      *
      * @return Returns an array of Integer that show the shortest weights from the source node, to every other node in the graph.
      */
@@ -104,6 +140,15 @@ public class Dijkstra {
         }
         return dist;
     }
+
+    /**
+     * Calculates oneToAll Dijkstra distances from source node to all other reachable nodes in the graph.
+     * @param source The source node ID.
+     * @param weight Ranges from 0 to 1 and determines the weighting of length vs. height
+     *               1.0: only length counts. 0.0: only height counts.
+     * @return Returns an int[] array that contains the distances from the source node for each node of
+     * the graph.
+     */
     public int[] oneToAll(int source, double weight) {
         long[] distLong = oneToAllLong(source, weight);
         int[] dist = new int[distLong.length];

@@ -23,7 +23,7 @@ public class Graph {
     public Graph(int numberOfNodes, int numberOfEdges) {
         this.numberOfNodes = numberOfNodes;
         this.numberOfEdges = numberOfEdges;
-        System.out.println("New graph created with " + numberOfNodes + " nodes and " + numberOfEdges + " edges.");
+        //System.out.println("New graph created with " + numberOfNodes + " nodes and " + numberOfEdges + " edges.");
         this.lat = new double[numberOfNodes];
         this.lon = new double[numberOfNodes];
         this.heightCm = new int[numberOfNodes];
@@ -32,6 +32,14 @@ public class Graph {
         this.edgeLength = new int[numberOfEdges];
         this.edgeHeight = new int[numberOfEdges];
     }
+
+    /**
+     * Finds the graph's node that is closest to the coordinates given.
+     * @param lon The longitude.
+     * @param lat The latitude.
+     * @return A double[] array with length 2 that has one entry for longitude and one entry for latitude of
+     * the node in question.
+     */
     public double[] findClosestNode(double lon, double lat) {
         int best = -1;
         double bestApprox = Double.POSITIVE_INFINITY;
@@ -51,8 +59,10 @@ public class Graph {
         coords[1] = gLat[best];
         return coords;
     }
-    public int getNumberOfNodes(){return numberOfNodes;}
-    public int getNumberOfEdges(){return numberOfEdges;}
+
+    //Getters and setters
+    public int getNumberOfNodes() { return numberOfNodes; }
+    public int getNumberOfEdges() { return numberOfEdges; }
     public double[] getLat() { return lat; }
     public double[] getLon() { return lon; }
     public int[] getHeightCm() { return heightCm; }
@@ -61,6 +71,6 @@ public class Graph {
     public int[] getEdgeTo() { return edgeTo; }
     public int[] getEdgeLength() { return edgeLength; }
     public int[] getEdgeHeight() { return edgeHeight; }
-    public int firstOut(int e){return offset[e];}
-    public int lastOut(int e){return offset[e + 1];}
+    public int firstOut(int e) { return offset[e]; }
+    public int lastOut(int e) { return offset[e + 1]; }
 }
