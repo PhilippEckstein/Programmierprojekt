@@ -1,3 +1,4 @@
+package backend;
 
 public class Graph {
     private final int numberOfNodes;
@@ -37,13 +38,13 @@ public class Graph {
      * Finds the graph's node that is closest to the coordinates given.
      * @param lon The longitude.
      * @param lat The latitude.
-     * @return A double[] array with length 2 that has one entry for longitude and one entry for latitude of
-     * the node in question.
+     * @return A double[] array with length 3 that has one entry for latitude, one entry for longitude and
+     * one entry for the id of the node in question.
      */
     public double[] findClosestNode(double lon, double lat) {
         int best = -1;
         double bestApprox = Double.POSITIVE_INFINITY;
-        double[] coords = {0.0,0.0};
+        double[] coords = {0.0,0.0,0};
         double[] gLat = getLat();
         double[] gLon = getLon();
         for (int i = 0; i < numberOfNodes; i++) {
@@ -55,8 +56,9 @@ public class Graph {
                 best = i;
             }
         }
-        coords[0] = gLon[best];
-        coords[1] = gLat[best];
+        coords[0] = gLat[best];
+        coords[1] = gLon[best];
+        coords[2] = best;
         return coords;
     }
 
@@ -66,7 +68,6 @@ public class Graph {
     public double[] getLat() { return lat; }
     public double[] getLon() { return lon; }
     public int[] getHeightCm() { return heightCm; }
-
     public int[] getOffset() { return offset; }
     public int[] getEdgeTo() { return edgeTo; }
     public int[] getEdgeLength() { return edgeLength; }

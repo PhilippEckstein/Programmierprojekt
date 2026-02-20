@@ -1,3 +1,5 @@
+package backend;
+
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -48,5 +50,9 @@ public class HgtTile {
      */
     public short heightMeters(int row, int col) {
         return heights[row * SIZE + col];
+    }
+
+    public short[] getHeights() {
+        return heights;
     }
 }

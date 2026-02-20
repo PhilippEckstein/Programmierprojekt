@@ -4,23 +4,29 @@ import com.sun.net.httpserver.HttpServer;
 
 import java.io.*;
 import java.net.InetSocketAddress;
+import java.nio.file.Path;
+
+import backend.*;
 
 
 public class Server {
-
-    private HttpServer server;
-
+    final private HttpServer server;
+    final Graph graph;
     public Server(int port) throws IOException {
 
         server = HttpServer.create(new InetSocketAddress(port), 0);
 
-        server.createContext("/api/nearest", new NearestHandler());
-        server.createContext("/api/route", new RouteHandler());
-        server.createContext("/", new StaticFileHandler("src/main/src/frontend/web"));
-
+        final GraphReader graphReader = new GraphReader(getGraphDirectory());
+        System.out.println("Initiating graph loading. Server will start once the graph is loaded. This might take a short while.");
+        graph = graphReader.readData();
+        System.out.println("Graph loading completed. Server is starting.");
         server.start();
-        System.out.println("Server läuft auf http://localhost:8080");
+        server.createContext("/api/nearest", new NearestHandler(graph));
+        server.createContext("/api/route", new RouteHandler(graph));
+        server.createContext("/", new StaticFileHandler("src/main/src/frontend/web"));
+        System.out.println("Server now running under http://localhost:8080.");
     }
+
     public static void main(String[] args) throws IOException {
         int port = 8080; // default, optional per args
         if (args.length > 0) {
@@ -28,4 +34,27 @@ public class Server {
         }
         new Server(port);
     }
+
+    public static String getGraphDirectory() throws IOException {
+        InputStream is = Server.class.getClassLoader().getResourceAsStream("config.txt");
+        if (is == null) {
+            throw new RuntimeException("config.txt not found");
+        }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        String line;
+        line = reader.readLine();
+        line = reader.readLine();
+        if (!line.startsWith("graphFilePath =")) {
+            throw new IOException("config.txt is corrupted. Second line must start with 'graphFilePath ='.");
+        } else {
+            String path = line.substring(15).trim();
+            if (path != null && path.length() >= 2 &&
+                    path.startsWith("\"") && path.endsWith("\"")) {
+                path = path.substring(1, path.length() - 1);
+            }
+            System.out.println("Determined directory of graph file from config.txt: "+path);
+            return path;
+        }
+    }
 }
+

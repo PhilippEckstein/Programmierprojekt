@@ -1,15 +1,22 @@
 package frontend.src;
 
+import backend.Graph;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class RouteHandler implements HttpHandler {
+    final Graph graph;
+    public RouteHandler(Graph graph) {
+        this.graph = graph;
+    }
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+
         String geojson = "{ \"type\": \"FeatureCollection\", \"features\": [] }";
 
         exchange.getResponseHeaders().add("Content-Type", "application/json");

@@ -24,7 +24,6 @@ public class StaticFileHandler implements HttpHandler {
         File file = new File(root, path);
 
         if (!file.exists()) {
-
             exchange.sendResponseHeaders(404, 0);
             exchange.getResponseBody().close();
             return;

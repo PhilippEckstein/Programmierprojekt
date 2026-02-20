@@ -1,0 +1,2 @@
+Please insert the file path to the graph file below after the equals sign.
+graphFilePath = "C:\Users\fabia\OneDrive\USB 256\Studium Info\3. Semester (WiSe 2526)\Programmierprojekt Karte\FmiHgtDateien\bw-bicycle.fmi"
