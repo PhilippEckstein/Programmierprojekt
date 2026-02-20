@@ -62,7 +62,7 @@ map.addEventListener('click', async (e) => {
 });
 
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+L.tileLayer('https://tiles.fmi.uni-stuttgart.de/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
@@ -96,9 +96,11 @@ async function calculateRoute() {
 async function resetMarkers() {
     markerAmount = 0;
     map.removeLayer(markerA);
-    map.removeLayer(markerB);
     markerAId = null;
+    markerA = null;
+    map.removeLayer(markerB);
     markerBId = null;
+    markerB = null;
 }
 
 
