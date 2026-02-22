@@ -4,7 +4,6 @@ import com.sun.net.httpserver.HttpServer;
 
 import java.io.*;
 import java.net.InetSocketAddress;
-import java.nio.file.Path;
 
 import backend.*;
 
@@ -23,7 +22,7 @@ public class Server {
         server.start();
         server.createContext("/api/nearest", new NearestHandler(graph));
         server.createContext("/api/route", new RouteHandler(graph));
-        server.createContext("/", new StaticFileHandler("src/main/src/frontend/web"));
+        server.createContext("/", new StaticFileHandler("src/main/resources/web"));
         System.out.println("Server now running under http://localhost:8080.");
     }
 
