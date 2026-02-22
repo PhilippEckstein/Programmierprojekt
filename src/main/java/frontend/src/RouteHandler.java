@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
@@ -15,6 +16,9 @@ public class RouteHandler implements HttpHandler {
     }
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+        InputStream input = exchange.getRequestBody();
+        String jsonInput = new String(input.readAllBytes(), StandardCharsets.UTF_8);
+        System.out.println("Received input for route calculation: " + jsonInput);
 
         String geojson = "{ \"type\": \"FeatureCollection\", \"features\": [] }";
 

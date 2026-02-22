@@ -71,7 +71,7 @@ map.fitBounds(germanyBounds);
 
 async function calculateRoute() {
     console.log("Route calculation initialised. Passing values to backend.");
-    const sliderWeight = slider.value;
+    const sliderWeight = Number(slider.value);
     const aLat = markerA.getLatLng().lat;
     const aLon = markerA.getLatLng().lng;
     const bLat = markerB.getLatLng().lat;
@@ -89,18 +89,22 @@ async function calculateRoute() {
             body: JSON.stringify({ sliderWeight: sliderWeight, aLat: aLat, aLon: aLon, aId: aId, bLat: bLat, bLon: bLon, bId: bId})
         });
 
-    const points = await res.json();
-    points.forEach(p => L.marker([p.lat, p.lon]).addTo(map).bindPopup(p.label));
+    //const points = await res.json();
+    //points.forEach(p => L.marker([p.lat, p.lon]).addTo(map).bindPopup(p.label));
 }
 
 async function resetMarkers() {
     markerAmount = 0;
-    map.removeLayer(markerA);
-    markerAId = null;
-    markerA = null;
-    map.removeLayer(markerB);
-    markerBId = null;
-    markerB = null;
+    if (markerA != null) {
+        map.removeLayer(markerA);
+        markerAId = null;
+        markerA = null;
+    }
+    if (markerB != null) {
+        map.removeLayer(markerB);
+        markerBId = null;
+        markerB = null;
+    }
 }
 
 
