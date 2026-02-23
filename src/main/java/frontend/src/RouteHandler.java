@@ -25,23 +25,29 @@ public class RouteHandler implements HttpHandler {
         System.out.println("Received input for route calculation: " + jsonInput);
         JsonObject jsonObject = gson.fromJson(jsonInput, JsonObject.class);
 
-        double markerALat = Double.parseDouble(jsonObject.get("aLat").toString());
-        double markerALon = Double.parseDouble(jsonObject.get("aLon").toString());
-        int markerAId = Integer.parseInt(jsonObject.get("aId").toString());
-        double markerBLat = Double.parseDouble(jsonObject.get("bLat").toString());
-        double markerBLon = Double.parseDouble(jsonObject.get("bLon").toString());
-        int markerBId = Integer.parseInt(jsonObject.get("bId").toString());
-        double sliderWeight = Double.parseDouble(jsonObject.get("sliderWeight").toString());
+        double markerALat = jsonObject.get("aLat").getAsDouble();
+        double markerALon = jsonObject.get("aLon").getAsDouble();
+        int markerAId = jsonObject.get("aId").getAsInt();
+        double markerBLat = jsonObject.get("bLat").getAsDouble();;
+        double markerBLon = jsonObject.get("bLon").getAsDouble();
+        int markerBId = jsonObject.get("bId").getAsInt();
+        double sliderWeight = jsonObject.get("sliderWeight").getAsDouble();
 
         Dijkstra dijkstra = new Dijkstra(graph);
         Dijkstra.DijkstraPath path = dijkstra.oneToOnePath(markerAId, markerBId, sliderWeight);
-        
+        JsonObject geo = GeoJsonBuilder.buildRouteGeoJson(
+                graph,
+                path,
+                markerAId, markerALat, markerALon,
+                markerBId, markerBLat, markerBLon,
+                sliderWeight
+        );
 
+        String geoJson= gson.toJson(geo);
 
-        String geojson = "{ \"type\": \"FeatureCollection\", \"features\": [] }";
 
         exchange.getResponseHeaders().add("Content-Type", "application/json");
-        byte[] resp = geojson.getBytes(StandardCharsets.UTF_8);
+        byte[] resp = geoJson.getBytes(StandardCharsets.UTF_8);
         exchange.sendResponseHeaders(200, resp.length);
 
         OutputStream os = exchange.getResponseBody();

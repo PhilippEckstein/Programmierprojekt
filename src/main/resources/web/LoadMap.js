@@ -7,6 +7,7 @@ var markerA = null;
 var markerB = null;
 var markerAId = null;
 var markerBId = null;
+var routeLayer = null;
 
 slider.addEventListener('input', () => {
     sliderValue.textContent = slider.value;
@@ -70,6 +71,11 @@ L.tileLayer('https://tiles.fmi.uni-stuttgart.de/{z}/{x}/{y}.png', {
 map.fitBounds(germanyBounds);
 
 async function calculateRoute() {
+    if (!markerA || !markerB) {
+        console.log("Place two markers first.");
+        return;
+    }
+
     const sliderWeight = Number(slider.value);
     const aLat = markerA.getLatLng().lat;
     const aLon = markerA.getLatLng().lng;
@@ -88,8 +94,51 @@ async function calculateRoute() {
             body: JSON.stringify({ sliderWeight: sliderWeight, aLat: aLat, aLon: aLon, aId: aId, bLat: bLat, bLon: bLon, bId: bId})
         });
 
-    //const points = await res.json();
-    //points.forEach(p => L.marker([p.lat, p.lon]).addTo(map).bindPopup(p.label));
+    if (!res.ok) {
+        const txt = await res.text();
+        console.error("Route request failed:", res.status, txt);
+        return;
+    }
+
+    const geojson = await res.json();
+
+    if (routeLayer) {
+        map.removeLayer(routeLayer);
+        routeLayer = null;
+    }
+    const line = geojson.features.find(f => f.geometry && f.geometry.type === "LineString");
+
+    if (line && line.properties) {
+        const distCm = line.properties.distance_cm ?? null;
+        const elevationCm = line.properties.elevation_cm ?? null;
+
+        if (distCm != null) {
+            const distKm = distCm / 100000.0;
+            document.getElementById("distance_km").textContent = distKm.toFixed(2);
+        } else {
+            document.getElementById("distance_km").textContent = "-";
+        }
+
+    if (elevationCm != null) {
+            const elevM = elevationCm / 100.0;
+            document.getElementById("elevation_m").textContent = Math.round(elevM).toString();
+        } else {
+            document.getElementById("elevation_m").textContent = "-";
+        }
+    }
+    routeLayer = L.geoJSON(geojson, {
+        style: (feature) => {
+            if (feature.geometry && feature.geometry.type === "LineString") {
+                return { weight: 6 };
+            }
+            return {};
+        },
+    }).addTo(map);
+
+    const bounds = routeLayer.getBounds();
+    if (bounds && bounds.isValid()) {
+        map.fitBounds(bounds, { padding: [20, 20] });
+    }
 }
 
 async function resetMarkers() {
@@ -103,6 +152,10 @@ async function resetMarkers() {
         map.removeLayer(markerB);
         markerBId = null;
         markerB = null;
+    }
+    if (routeLayer) {
+        map.removeLayer(routeLayer);
+        routeLayer = null;
     }
 }
 

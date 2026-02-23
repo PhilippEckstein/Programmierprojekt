@@ -78,13 +78,13 @@ public class Dijkstra {
             if (current.node == target) {return current.distance;}
             int node = current.node;
 
-            for (int i = graph.firstOut(node); i < graph.firstOut(node+1); i++) { //Goes through all edges going out of current node
-                int dest = edgesTo[i]; // Destination of edge
-                long cost = edgeCostCm(edgeLength[i], edgeHeight[i], weight); //Cost of edge
+            for (int i = graph.firstOut(node); i < graph.firstOut(node+1); i++) {
+                int dest = edgesTo[i];
+                long cost = edgeCostCm(edgeLength[i], edgeHeight[i], weight);
                 long totalCost = current.distance + cost;
-                if (totalCost < dist[dest]) { //If costs of current node + edge are lower than current cost of destination
-                    dist[dest] = totalCost; //Replace costs (/distance) of destination with new value
-                    queue.add(new State(totalCost, dest)); //Add destination to queue as it has now been visited.
+                if (totalCost < dist[dest]) {
+                    dist[dest] = totalCost;
+                    queue.add(new State(totalCost, dest));
 
                 }
             }

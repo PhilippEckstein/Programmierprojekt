@@ -136,6 +136,7 @@ public class GraphReader {
             return graph;
         } catch (IOException e) {
             System.err.println("Error reading file: " + file.getAbsolutePath());
+            e.printStackTrace();
         }
         return null;
     }
