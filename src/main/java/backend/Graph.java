@@ -72,6 +72,6 @@ public class Graph {
     public int[] getEdgeTo() { return edgeTo; }
     public int[] getEdgeLength() { return edgeLength; }
     public int[] getEdgeHeight() { return edgeHeight; }
-    public int firstOut(int e) { return offset[e]; }
-    public int lastOut(int e) { return offset[e + 1]; }
+    public int firstOut(int e) { return offset[e]; } //Index of first outgoing edge of a node
+    public int lastOut(int e) { return offset[e + 1]; } //Index of first edge that does NOT belong to node with ID e anymore.
 }

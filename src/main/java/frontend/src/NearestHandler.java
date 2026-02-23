@@ -18,10 +18,12 @@ public class NearestHandler implements HttpHandler {
     public NearestHandler(Graph graph) {
         this.graph = graph;
     }
-    class Location {
+
+    private static final class Location {
         double lat;
         double lon;
     }
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         Gson gson = new Gson();
@@ -29,7 +31,7 @@ public class NearestHandler implements HttpHandler {
         String jsonInput = new String(input.readAllBytes(), StandardCharsets.UTF_8);
         //System.out.println(jsonInput);
         Location location = gson.fromJson(jsonInput, Location.class);
-        System.out.println("Searching closest node to: Lat " + location.lat + ", Lon " + location.lon);
+        System.out.println("Received input for searching closest node: Lat " + location.lat + ", Lon " + location.lon);
 
         double[] nearestPoint = graph.findClosestNode(location.lon, location.lat);
         System.out.println("Found closest node at: Lat "+nearestPoint[0]+ ", Lon "+nearestPoint[1]);

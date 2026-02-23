@@ -24,7 +24,7 @@ map.addEventListener('click', async (e) => {
     if (markerAmount < 2) {
         const lat = e.latlng.lat;
         const lon = e.latlng.lng;
-        console.log("Sending coordinates to backend: Lat "+lat+", Lon "+e.latlng.lng);
+        console.log("Sending coordinates to backend to find closest node to: Lat "+lat+", Lon "+e.latlng.lng);
         const res = await fetch('/api/nearest', {
             method: 'POST',
             headers: {
@@ -33,7 +33,7 @@ map.addEventListener('click', async (e) => {
             body: JSON.stringify({ lat: lat, lon: lon })
         });
         const result = await res.json();
-        console.log("Nearest point: Lat "+result.lat+", Lon "+result.lon+", Node id "+result.id);
+        console.log("Backend found closest node at: Lat "+result.lat+", Lon "+result.lon+", Node id "+result.id+". Marker placed.");
         const latlng = L.latLng(result.lat, result.lon);
         if (markerAmount == 0) {
             markerAId = result.id;
@@ -57,7 +57,7 @@ map.addEventListener('click', async (e) => {
         }
         markerAmount++;
     } else {
-        console.log("There are already two markers on the map. Reset the markers if you want to place new ones.");
+        console.log("There are already two markers on the map. Reset the markers if you want to place them somewhere else.");
     }
 });
 
@@ -70,7 +70,6 @@ L.tileLayer('https://tiles.fmi.uni-stuttgart.de/{z}/{x}/{y}.png', {
 map.fitBounds(germanyBounds);
 
 async function calculateRoute() {
-    console.log("Route calculation initialised. Passing values to backend.");
     const sliderWeight = Number(slider.value);
     const aLat = markerA.getLatLng().lat;
     const aLon = markerA.getLatLng().lng;
@@ -79,7 +78,7 @@ async function calculateRoute() {
     const aId = markerAId;
     const bId = markerBId;
 
-    console.log("sliderWeight: "+sliderWeight+", aLat: "+aLat+", aLon: "+aLon+", aId: "+aId+", bLat: "+bLat+", bLon: "+bLon+", bId: "+bId);
+    console.log("Sending marker and slider information to backend. sliderWeight: "+sliderWeight+", aLat: "+aLat+", aLon: "+aLon+", aId: "+aId+", bLat: "+bLat+", bLon: "+bLon+", bId: "+bId);
     
     const res = await fetch('/api/route', {
             method: 'POST',
