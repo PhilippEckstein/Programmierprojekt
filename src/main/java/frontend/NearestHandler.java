@@ -1,4 +1,4 @@
-package frontend.src;
+package frontend;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;

@@ -1,4 +1,4 @@
-package frontend.src;
+package frontend;
 
 import backend.Dijkstra;
 import backend.Graph;
@@ -43,8 +43,9 @@ public class RouteHandler implements HttpHandler {
                 sliderWeight
         );
 
-        String geoJson= gson.toJson(geo);
+        String geoJson = gson.toJson(geo);
 
+        System.out.println("Sending calculated route to frontend (GeoJSON format).");
 
         exchange.getResponseHeaders().add("Content-Type", "application/json");
         byte[] resp = geoJson.getBytes(StandardCharsets.UTF_8);

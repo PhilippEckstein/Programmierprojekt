@@ -1,4 +1,4 @@
-package frontend.src;
+package frontend;
 
 import com.sun.net.httpserver.HttpServer;
 
