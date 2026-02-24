@@ -1,2 +1,0 @@
-Please insert the file path to the graph file below after the equals sign.
-graphFilePath = 
